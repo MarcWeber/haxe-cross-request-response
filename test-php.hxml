@@ -1,0 +1,17 @@
+-main Main
+-cp test
+-cp src
+-cp ../haxe-assertions/src
+-cp ../nodejs-std/src
+--php-front index.php
+--remap neko:php
+-php php
+
+
+# sample .htaccess file:
+# RewriteEngine On
+# RewriteBase /php
+# 
+# RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteCond %{REQUEST_FILENAME} !-d
+# RewriteRule (.*) index.php?%{QUERY_STRING} [L]

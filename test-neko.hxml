@@ -1,0 +1,6 @@
+-main Main
+-cp test
+-cp src
+-cp ../nodejs-std/src
+-cp ../haxe-assertions/src
+-neko index.n

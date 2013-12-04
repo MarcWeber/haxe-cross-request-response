@@ -23,6 +23,9 @@ class Main {
     }, {
 #if js
 port : 8080
+#elseif JAVA_NANOHTTPD
+port : 8080
+#else
 #end
     });
   }

@@ -1,0 +1,19 @@
+-main Main
+-cp test
+-cp src
+-cp ../haxe-assertions/src
+-cp ../nodejs-std/src
+-cp java/externs-nanohttpd-core
+-cp java/externs-nanohttpd-server
+-cp java/nanohttpd/core/target/classes
+-D JAVA_NANOHTTPD
+-java out-java-nonohttpd
+
+
+# JHEC_JAR=../java-haxe-extern-creator/jhec.jar
+# java -jar $JHEC_JAR -source java/nanohttpd/core/src/main/java/      -output java/externs-nanohttpd-core/  -packages fi.iki.elonen
+# java -jar $JHEC_JAR -source java/nanohttpd/webserver/src/main/java/ -output java/externs-nanohttpd-server/  -packages fi.iki.elonen
+# 
+# before compiling :
+# export CLASSPATH=`pwd`/java/nanohttpd/core/target/classes:`pwd`/java/nanohttpd/webserver/target/classes
+# java -cp $CLASSPATH:java-nanohttpd/java-nanohttpd.jar haxe.root.Main

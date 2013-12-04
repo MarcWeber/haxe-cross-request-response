@@ -1,6 +1,10 @@
 package web;
 using mw.Assertions;
 
+#if JAVA_NANOHTTPD
+import fi.iki.elonen.NanoHTTPD;
+#end
+
 class RequestResponseHelper {
   static public inline function get(rr:web.RequestResponse, name:String):String {
     return RequestResponseHelper.getOrNull(rr, name).assert_nn('get parameter ${name} expected');
@@ -12,6 +16,8 @@ class RequestResponseHelper {
     return untyped __php__(isset($_GET[$s]) ? $_GET[$s] : null);
     #elseif neko
     return rr.paramValues.exists(name) ? rr.paramValues.get(name) : null;
+    #elseif JAVA_NANOHTTPD
+      throw "TODO";
     #end
   }
 
@@ -28,6 +34,8 @@ class RequestResponseHelper {
       throw '_SERVER REQUEST_URI not set, no mod rewrite?';
   #elseif neko
     return neko.Web.getURI();
+  #elseif JAVA_NANOHTTPD
+    throw "TODO";
   #else
     #error TODO
   #end
@@ -64,6 +72,9 @@ class RequestResponseHelper {
         neko.Web.setHeader(k, headers.get(k));
       }
       neko.Lib.print(content);
+    #elseif JAVA_NANOHTTPD
+      // TODO headers etc
+      rr.response =new fi.iki.elonen.NanoHTTPD_Response(fi.iki.elonen.NanoHTTPD_Response_Status.valueOf("OK"), "text/html", content);
     #else
     #error TODO
     #end

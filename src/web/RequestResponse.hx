@@ -20,6 +20,8 @@ class RequestResponse {
   public var response: js.NodeHttpServerResp;
   #elseif neko
   public var paramValues: Map<String,String>;
+  #elseif JAVA_NANOHTTPD
+  public var response: fi.iki.elonen.NanoHTTPD_Response;
   #end
 
   public var onError: web.RequestResponse -> Dynamic -> Array<haxe.StackItem> -> Void;

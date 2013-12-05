@@ -1,5 +1,7 @@
 package web;
 import haxe.CallStack;
+import web.Request;
+import web.Response;
 
 #if JAVA_NANOHTTPD
 import fi.iki.elonen.NanoHTTPD;
@@ -35,9 +37,12 @@ class NanoHTTPDHx extends NanoHTTPD {
   )
   :fi.iki.elonen.NanoHTTPD_Response 
   {
-    var rr = new RequestResponse(this.onError);
-    this.process(rr);
-    return rr.response;
+    var s = {
+      request: new RequestState(),
+      response: new ResponseState(this.onError)
+    }
+    this.process(s);
+    return s.response.response;
   }
 
 }
@@ -52,26 +57,32 @@ class Server {
   ) {
   #if js
     js.Node.http.createServer(function(request, response){
-      var rr = new RequestResponse(onError, request, response);
+      var s = {
+        request: new RequestState(request),
+        response: new ResponseState(onError, response)
+      }
       try{
-        process(rr);
+        process(s);
       }catch(e:Dynamic){
-        rr.onError(rr, e, CallStack.exceptionStack() );
+        s.response.onError(s, e, CallStack.exceptionStack() );
       }
     }).listen(options.port);
   #elseif (php || neko)
-    var rr = new RequestResponse(onError);
+    var s = {
+      request: new RequestState(),
+      response: new ResponseState(onError)
+    };
     try{
-      process(rr);
+      process(s);
     }catch(e:Dynamic){
-      rr.onError(rr, e, haxe.CallStack.exceptionStack() );
+      s.response.onError(s, e, haxe.CallStack.exceptionStack() );
     }
   #elseif JAVA_NANOHTTPD
-    var server = new NanoHTTPDHx(options.port, function(rr){
+    var server = new NanoHTTPDHx(options.port, function(s){
       try{
-        process(rr);
+        process(s);
       }catch(e:Dynamic){
-        rr.onError(rr, e, CallStack.exceptionStack() );
+        s.response.onError(s, e, CallStack.exceptionStack() );
       }
     }, onError);
     try{

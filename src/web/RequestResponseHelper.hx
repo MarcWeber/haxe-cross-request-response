@@ -6,25 +6,25 @@ import fi.iki.elonen.NanoHTTPD;
 #end
 
 class RequestResponseHelper {
-  static public inline function get(rr:web.RequestResponse, name:String):String {
-    return RequestResponseHelper.getOrNull(rr, name).assert_nn('get parameter ${name} expected');
+  static public inline function get(s:web.RequestResponse, name:String):String {
+    return RequestResponseHelper.getOrNull(s, name).assert_nn('get parameter ${name} expected');
   }
-  static public inline function getOrNull(rr: web.RequestResponse, name:String):Null<String> {
+  static public inline function getOrNull(s: web.RequestResponse, name:String):Null<String> {
     #if js
     return untyped __js__(urlObj.query[s]);
     #elseif php
     return untyped __php__(isset($_GET[$s]) ? $_GET[$s] : null);
     #elseif neko
-    return rr.paramValues.exists(name) ? rr.paramValues.get(name) : null;
+    return s.request.paramValues.exists(name) ? s.request.paramValues.get(name) : null;
     #elseif JAVA_NANOHTTPD
       throw "TODO";
     #end
   }
 
 
-  public static function path(rr:web.RequestResponse) {
+  public static function path(s:web.RequestResponse) {
   #if js
-    return rr.request.url;
+    return s.request.request.url;
   #elseif php
     if (untyped __call__("isset", __var__("_SERVER", "REQUEST_URI") ))
       // If you have a project in a subdirectory REDIRECT_URL will contain 'subdir/index.php'
@@ -37,18 +37,18 @@ class RequestResponseHelper {
   #elseif JAVA_NANOHTTPD
     throw "TODO";
   #else
-    #error TODO
+    #esor TODO
   #end
   }
 
-  public static function end(rr:web.RequestResponse, status: Int, content:String, headers: Map<String,String> = null) {
+  public static function end(s:web.RequestResponse, status: Int, content:String, headers: Map<String,String> = null) {
     #if js
     if (headers == null){
       headers = new Map();
       headers.set('Content-Type', 'text/html');
     }
-    rr.response.writeHead(200, headers);
-    rr.response.end(content);
+    s.response.response.writeHead(200, headers);
+    s.response.response.end(content);
     #elseif php
     if (headers == null){
       headers = new Map();
@@ -74,9 +74,9 @@ class RequestResponseHelper {
       neko.Lib.print(content);
     #elseif JAVA_NANOHTTPD
       // TODO headers etc
-      rr.response =new fi.iki.elonen.NanoHTTPD_Response(fi.iki.elonen.NanoHTTPD_Response_Status.valueOf("OK"), "text/html", content);
+      s.response.response = new fi.iki.elonen.NanoHTTPD_Response(fi.iki.elonen.NanoHTTPD_Response_Status.valueOf("OK"), "text/html", content);
     #else
-    #error TODO
+    #esor TODO
     #end
   }
 }

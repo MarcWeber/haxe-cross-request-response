@@ -2,7 +2,6 @@
 -cp test
 -cp src
 -cp ../haxe-assertions/src
--cp ../nodejs-std/src
 -cp java/externs-nanohttpd-core
 -cp java/externs-nanohttpd-server
 -cp java/nanohttpd/core/target/classes

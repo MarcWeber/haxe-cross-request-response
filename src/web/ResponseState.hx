@@ -1,7 +1,9 @@
 package web;
+#if SERVER
+
 import haxe.CallStack;
 
-#if js
+#if NODE_JS
 import js.Node;
 #end
 // Minimal stateful thing knowing how to retrieve get/post/path data
@@ -18,7 +20,7 @@ class ResponseState {
   #if JAVA_NANOHTTPD
     public var response: fi.iki.elonen.NanoHTTPD_Response;
   #end
-  #if js
+  #if NODE_JS
   public var response: js.NodeHttpServerResp;
   #end
 
@@ -31,3 +33,5 @@ class ResponseState {
     this.onError = onError;
   }
 }
+
+#end

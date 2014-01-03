@@ -1,5 +1,5 @@
 package web;
-#if js
+#if NODE_JS
 import js.Node;
 #end
 
@@ -13,7 +13,7 @@ import js.Node;
 
 class RequestState {
 
-  #if js
+  #if NODE_JS
   public var urlObj: js.Node.NodeUrlObj;
   public var request: js.NodeHttpServerReq;
   public var response: js.NodeHttpServerResp;
@@ -33,6 +33,8 @@ class RequestState {
     this.request = request;
     // this is very likely to be used, so do it once
     this.urlObj = js.Node.url.parse(request.url);
+  #elseif neko
+    this.paramValues = neko.Web.getParams();
   #end
   }
 }

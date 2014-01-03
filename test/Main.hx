@@ -17,7 +17,7 @@ class Main {
     // #end
 
     Server.serve(function(rr){
-        rr.end(400, "serving page " + rr.path());
+        rr.end(400, "sserving page " + rr.path());
     }, function(rr, e, stack){
       rr.end(503, e+" "+stack);
     }, {

@@ -15,6 +15,20 @@ typedef File = {
 #if SERVER
 
 class RequestResponseHelper {
+
+#if !macro
+
+  static public function referer(s:web.RequestResponse):String {
+#if php
+    if (untyped __call__("isset", __var__("_SERVER", "HTTP_REFERER")))
+      return untyped __var__("_SERVER", "HTTP_REFERER");
+    else
+      return "";
+#else
+      TODO
+#end
+  }
+
   static public inline function get(s:web.RequestResponse, name:String):String {
     return RequestResponseHelper.getOrNull(s, name).assert_nn('get parameter ${name} expected');
   }
@@ -46,7 +60,7 @@ class RequestResponseHelper {
       ? untyped __var__("_POST", name)
       : null;
     #elseif neko
-      throw "TODO";
+      return s.request.paramValues.exists(name) ? s.request.paramValues.get(name) : null;
     // return s.request.paramValues.exists(name) ? s.request.paramValues.get(name) : null;
     #elseif JAVA_NANOHTTPD
       throw "TODO";
@@ -61,8 +75,11 @@ class RequestResponseHelper {
     TODO
     // return untyped __js__(urlObj.query[name]);
     #elseif php
-    if ( untyped __call__("isset", __var__("_FILE", name))){
-      var f = untyped __var__("_FILE", name);
+    if ( untyped __call__("isset", __var__("_FILES", name))){
+      var f = untyped __var__("_FILES", name);
+      if (f == null || (untyped __call__('empty', __var__(f, "name")))){
+        return null;
+      }
       return {
         name: untyped __var__(f, "name"),
         type: untyped __var__(f, "type"),
@@ -136,6 +153,9 @@ class RequestResponseHelper {
     untyped __call__("header", 'location: ${url}');
     if (close)
       untyped __call__("header", "Connection: close");
+  #elseif neko
+    // no idea how to pass code, looks like neko is using 302
+    neko.Web.redirect(url);
   #else
       throw "TODO";
   #end
@@ -183,6 +203,7 @@ class RequestResponseHelper {
     #esor TODO
     #end
   }
+#end
 }
 
 #end

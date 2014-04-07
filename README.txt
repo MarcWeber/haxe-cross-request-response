@@ -23,3 +23,9 @@ run: nekotools server
 additional useful libaries:
 github.com/MarcWeber/haxe-continuation/
 github.com/MarcWeber/haxe-assertions/
+
+
+Notes:
+While its possible to write in continuation passing style it doesn't make sense because
+for PHP like backends it would be slow (and harder to write).
+Thus targeting JS and PHP at the same tame is possible but insane.
